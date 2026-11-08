@@ -1,0 +1,51 @@
+# Tokyo (Shinjuku · Shibuya · Toshima · Nakano) - thirteen-city set member.
+id: TYO
+name: "Tokyo (Shinjuku · Shibuya · Toshima · Nakano)"
+crs: EPSG:32654
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R1758858", "R1759477", "R1759506", "R1543056"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: JPN, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [375030.26, 3944422.13, 387623.81, 3957144.51]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: ["OpenStreetMap"]   # OSM polygons served by Overture
+  file: buildings_overture.parquet
+  min_area_m2: 25
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["2487_138.75_35.0_140.0_36.25_JA.shp"]
+    ob25d: null
+
+streets:
+  # the study's Tokyo network: the OSM road ways served by Overture Maps
+  # (transportation segments; class -> highway), fetched when no Overpass
+  # instance answered - `blockmorph-morphometric fetch streets`
+  source: file
+  file: streets_overture.parquet
+  fetch: overture_segments
+  cut_all_roads: false
+
+credit: "OpenStreetMap buildings via Overture Maps; heights by automatic source selection (globfp); streets OpenStreetMap via Overture transportation segments"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 9460}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.144, "globfp": 0.758}
+  mega_share_default_roads: 0.516
+  tier1_all_roads: true
+  trimmed_blocks: 33
+  mega_blocks_split: 2
+  block_kind: {"street": 9450, "patch": 10}

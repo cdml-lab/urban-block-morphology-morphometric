@@ -1,0 +1,46 @@
+# Barcelona (Eixample · Ciutat Vella · Sant Martí · Sants) - thirteen-city set member.
+id: BCN
+name: "Barcelona (Eixample · Ciutat Vella · Sant Martí · Sants)"
+crs: EPSG:32631
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R3008998", "R3765380", "R3775150", "R3765489"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: ESP, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [424536.58, 4574178.06, 435687.4, 4587383.66]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: ["OpenStreetMap"]   # OSM polygons served by Overture
+  file: buildings_overture.parquet
+  min_area_m2: 25
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["826_1.25_41.25_2.5_42.5_AN_FR_SP.shp"]
+    ob25d: null
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "OpenStreetMap buildings via Overture Maps; heights by automatic source selection (globfp); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 2271}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.194, "globfp": 0.964}
+  mega_share_default_roads: 0.035
+  tier1_all_roads: false
+  trimmed_blocks: 45
+  mega_blocks_split: 1
+  block_kind: {"street": 2224, "patch": 47}

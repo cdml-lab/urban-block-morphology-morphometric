@@ -1,0 +1,46 @@
+# Rio de Janeiro (Zona Sul) - thirteen-city set member.
+id: RIO
+name: "Rio de Janeiro (Zona Sul)"
+crs: EPSG:32723
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R5520358", "R5520372", "R5518903", "R5520314", "R5516153", "R5516122", "R5514863", "R5516241", "R5514744", "R5514047"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: BRA, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [675203.73, 7446508.43, 690955.06, 7462725.57]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: null          # all conflated sources (Google Open Buildings, OSM, Microsoft)
+  file: buildings_overture.parquet
+  min_area_m2: 10                # informal fabric: 25 m2 would drop a large share of dwellings
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["481_-45.0_-25.0_-42.5_-22.5_BR.shp"]
+    ob25d: "ob25d_height.tif"
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "Overture Maps buildings (Google Open Buildings + OpenStreetMap + Microsoft, conflated); heights by automatic source selection (ob25d); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 1412}
+  height_source: ob25d
+  height_sample_coverage: {"osm": 0.398, "globfp": 0.688, "ob25d": 0.96}
+  mega_share_default_roads: 0.357
+  tier1_all_roads: true
+  trimmed_blocks: 17
+  mega_blocks_split: 13
+  block_kind: {"patch": 733, "street": 659, "partition": 20}

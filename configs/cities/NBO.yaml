@@ -1,0 +1,48 @@
+# Nairobi (Kibra · Dagoretti North · Starehe) - thirteen-city set member.
+id: NBO
+name: "Nairobi (Kibra · Dagoretti North · Starehe)"
+crs: EPSG:32737
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R16246699", "R16132840", "R16248852"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: KEN, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [247557.01, 9852280.83, 263541.34, 9861254.73]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: null          # all conflated sources (Google Open Buildings, OSM, Microsoft)
+  file: buildings_overture.parquet
+  min_area_m2: 10                # informal fabric: 25 m2 would drop a large share of dwellings
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["1326_36.25_-2.5_37.5_-1.25_KE_TZ.shp"]
+    ob25d: "ob25d_height.tif"
+
+streets:
+  source: osm
+  cut_all_roads: true
+  # Nairobi's OSM tags its ordinary streets (Kibera's lanes, estate roads) as `service`
+  # (35 % of the network length vs 9-16 % elsewhere), so every mapped way cuts blocks here.
+
+credit: "Overture Maps buildings (Google Open Buildings + OpenStreetMap + Microsoft, conflated); heights by automatic source selection (globfp); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 3597}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.0, "globfp": 0.798, "ob25d": 0.836}
+  mega_share_default_roads: 0.389
+  tier1_all_roads: false
+  trimmed_blocks: 11
+  mega_blocks_split: 86
+  block_kind: {"patch": 2213, "street": 1375, "partition": 9}

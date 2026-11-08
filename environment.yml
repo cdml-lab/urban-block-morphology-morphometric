@@ -1,0 +1,25 @@
+# Versions of the verification run (see requirements-lock.txt; Python 3.13.5, Windows 11).
+# The core repository must be checked out next to this one.
+name: urban-block-morphology-morphometric
+channels: [conda-forge]
+dependencies:
+  - python=3.13
+  - momepy=1.0.0
+  - libpysal=4.15
+  - geopandas=1.1
+  - shapely=2.1
+  - pyogrio
+  - pyproj
+  - pandas=2.3
+  - numpy=2.4
+  - scipy=1.16
+  - scikit-learn=1.7.2
+  - kneed=0.8.5
+  - osmnx=2.1
+  - pyyaml
+  - pyarrow
+  - pytest
+  - pip
+  - pip:
+      - -e ../urban-block-morphology
+      - -e .

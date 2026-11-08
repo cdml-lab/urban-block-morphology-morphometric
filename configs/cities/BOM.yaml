@@ -1,0 +1,46 @@
+# Mumbai (wards G/North · H/East · H/West · F/North) - thirteen-city set member.
+id: BOM
+name: "Mumbai (wards G/North · H/East · H/West · F/North)"
+crs: EPSG:32643
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R7885381", "R7885378", "R7885382", "R7885396"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: IND, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [269802.44, 2102210.05, 277959.33, 2113158.57]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: null          # all conflated sources (Google Open Buildings, OSM, Microsoft)
+  file: buildings_overture.parquet
+  min_area_m2: 10                # informal fabric: 25 m2 would drop a large share of dwellings
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["1724_72.5_18.75_73.75_20.0_IN.shp"]
+    ob25d: "ob25d_height.tif"
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "Overture Maps buildings (Google Open Buildings + OpenStreetMap + Microsoft, conflated); heights by automatic source selection (globfp); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 2534}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.0, "globfp": 0.806, "ob25d": 0.878}
+  mega_share_default_roads: 0.445
+  tier1_all_roads: true
+  trimmed_blocks: 25
+  mega_blocks_split: 46
+  block_kind: {"street": 1707, "patch": 670, "partition": 157}

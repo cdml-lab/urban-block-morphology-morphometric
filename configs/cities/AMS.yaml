@@ -1,0 +1,38 @@
+# Amsterdam (centre) - member of the three-city and thirteen-city sets.
+id: AMS
+name: "Amsterdam (centre)"
+crs: EPSG:32631
+sets: [three_cities, thirteen_cities]
+
+boundary:
+  kind: amsterdam_stadsdelen      # City of Amsterdam open data, union of four districts
+  districts: [Centrum, West, Zuid, Oost]
+  keep: largest_polygon
+  file: boundary.gpkg
+
+study_area:
+  # boundary ∩ imagery extent (PDOK Luchtfoto, 0.33 m; not used by Track A)
+  clip_bbox: [623339.25, 5797538.28, 639855.09, 5808100.26]
+
+buildings:
+  source: osm
+  min_area_m2: 25
+  max_height_m: 260
+
+heights:
+  policy: none                    # OSM height tags only, else floors x 3.2 m; the rest imputed
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "OpenStreetMap buildings, heights and streets (ODbL)"
+
+study:
+  blocks: {three_cities: 2708, thirteen_cities: 2858}
+  mega_share_default_roads: 0.061
+  tier1_all_roads: false
+  trimmed_blocks: 55
+  mega_blocks_split: 10
+  exempt_open: 5
+  block_kind: {"street": 2698, "patch": 160}

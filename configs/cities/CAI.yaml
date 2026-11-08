@@ -1,0 +1,47 @@
+# Cairo (historic core · Khedival city · Manshiyat Naser) - thirteen-city set member.
+id: CAI
+name: "Cairo (historic core · Khedival city · Manshiyat Naser)"
+crs: EPSG:32636
+sets: [thirteen_cities]
+
+boundary:
+  kind: gadm                      # Cairo's qisms are not OSM polygons
+  gadm: {iso3: EGY, level: 2, name1: "Qahirah"}
+  names: ["Al-Jamaliyah", "Ad-Darbal-Ahmar", "MonshatNasr", "'Abdin", "Babash-Sha'riyah", "Al-Muski", "Al-Azbakiyah", "Qasran-Nil", "Bulaq", "Az-Zahir", "As-SayidahZaynab", "AncientCairo", "Zamalik", "Shubra", "Rudal-Faraj", "Ash-Sharabiyah"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: EGY, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [327522.09, 3318023.1, 337325.0, 3331476.69]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: null          # all conflated sources (Google Open Buildings, OSM, Microsoft)
+  file: buildings_overture.parquet
+  min_area_m2: 10                # informal fabric: 25 m2 would drop a large share of dwellings
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["1433_30.0_28.75_31.25_30.0_EG.shp", "1434_31.25_28.75_32.5_30.0_EG.shp", "1463_30.0_30.0_31.25_31.25_EG.shp", "1464_31.25_30.0_32.5_31.25_EG.shp"]
+    ob25d: "ob25d_height.tif"
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "Overture Maps buildings (Google Open Buildings + OpenStreetMap + Microsoft, conflated); heights by automatic source selection (globfp); streets OpenStreetMap; boundary GADM 4.1"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 4821}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.004, "globfp": 0.856, "ob25d": 0.82}
+  mega_share_default_roads: 0.163
+  tier1_all_roads: false
+  trimmed_blocks: 18
+  mega_blocks_split: 15
+  block_kind: {"street": 4320, "patch": 499, "partition": 2}

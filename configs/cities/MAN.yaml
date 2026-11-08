@@ -1,0 +1,41 @@
+# Manhattan - member of the three-city and thirteen-city sets.
+id: MAN
+name: "Manhattan (New York)"
+crs: EPSG:32618
+sets: [three_cities, thirteen_cities]
+
+boundary:
+  kind: nyc_borough               # NYC DCP borough boundary, BoroCode 1
+  borough_code: 1
+  keep: largest_polygon           # the island proper (Roosevelt, Governors, Liberty islets dropped)
+  file: boundary.gpkg
+
+study_area:
+  # boundary ∩ imagery extent (NYS orthoimagery, 0.33 m; not used by Track A)
+  clip_bbox: [582282.7, 4505445.44, 592678.03, 4526457.53]
+
+buildings:
+  source: osm                     # OpenStreetMap building=* polygons (osmnx)
+  min_area_m2: 25
+  max_height_m: 550               # supertall towers
+
+heights:
+  policy: file                    # NYC Open Data building footprints: roof height
+  file: nyc_building_footprints.geojson
+  field: height_roof
+  unit: ft                        # converted to metres (x 0.3048)
+  fetch: nyc_open_data            # `blockmorph-morphometric fetch heights` downloads it
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "OpenStreetMap buildings and streets (ODbL); roof heights from NYC Open Data building footprints"
+
+study:
+  blocks: {three_cities: 3258, thirteen_cities: 3258}
+  mega_share_default_roads: 0.0
+  tier1_all_roads: false
+  trimmed_blocks: 45
+  mega_blocks_split: 0
+  block_kind: {"street": 3258}

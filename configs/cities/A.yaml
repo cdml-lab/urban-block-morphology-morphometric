@@ -1,0 +1,41 @@
+# City A (Israeli reference city) - member of three-city and thirteen-city, anonymised
+# as in the core repository urban-block-morphology (block keys A-<block_id>).
+# Its inputs are those of the core's results archive v1.0.0 (inputs/A/); the
+# study-area polygon is available on request, as for the core.
+id: A
+name: "City A (Israeli reference city)"
+crs: EPSG:2039                    # Israeli TM Grid, as in the core study
+sets: [three_cities, thirteen_cities]
+
+boundary:
+  kind: file                      # the core archive's study area of City A (on request)
+  file: study_area.gpkg
+
+study_area:
+  # study_area.gpkg already is boundary ∩ imagery extent; no further clip
+  clip_bbox: null
+
+buildings:
+  source: file                    # core archive inputs/A/buildings.gpkg (height_m, floors)
+  file: buildings.gpkg
+  min_area_m2: 25
+  max_height_m: 260
+
+heights:
+  policy: none                    # heights are already in the file: OSM height tag, else 3D-GloBFP
+
+streets:
+  source: file                    # core archive inputs/A/streets.gpkg (all fetched ways, OSM highway)
+  file: streets.gpkg
+  cut_all_roads: false
+
+credit: "OpenStreetMap buildings and streets (ODbL); heights OSM tags, else 3D-GloBFP (CC BY 4.0)"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {three_cities: 1590, thirteen_cities: 1609}
+  note: "three_cities descriptors identical to the core's City A morphometric 46 (max difference 3.5e-16 of range)"
+  mega_share_default_roads: 0.014
+  tier1_all_roads: false
+  trimmed_blocks: 21
+  mega_blocks_split: 1
+  block_kind: {"street": 1589, "patch": 20}

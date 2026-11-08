@@ -1,0 +1,49 @@
+# Lagos (Lagos Island · Lagos Mainland · Surulere) - thirteen-city set member.
+id: LOS
+name: "Lagos (Lagos Island · Lagos Mainland · Surulere)"
+crs: EPSG:32631
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R7644528", "R5403871"]
+  queries: ["Surulere, Lagos, Nigeria"]       # Nominatim name queries
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: NGA, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [534379.24, 710742.29, 571521.52, 729782.53]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: null          # all conflated sources (Google Open Buildings, OSM, Microsoft)
+  file: buildings_overture.parquet
+  min_area_m2: 10                # informal fabric: 25 m2 would drop a large share of dwellings
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["713_2.5_6.25_3.75_7.5_BN_NI.shp"]
+    ob25d: "ob25d_height.tif"
+
+streets:
+  source: osm
+  cut_all_roads: false
+  # the Lagos Island admin relation spans the lagoon; the physical island polygon
+  # (place=island, land only, Ikoyi included) is used instead.
+
+credit: "Overture Maps buildings (Google Open Buildings + OpenStreetMap + Microsoft, conflated); heights by automatic source selection (globfp); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 4062}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.002, "globfp": 0.856, "ob25d": 0.8}
+  mega_share_default_roads: 0.422
+  tier1_all_roads: true
+  trimmed_blocks: 10
+  mega_blocks_split: 61
+  block_kind: {"patch": 2546, "street": 1450, "partition": 66}

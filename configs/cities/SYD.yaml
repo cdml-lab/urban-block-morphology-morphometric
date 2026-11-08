@@ -1,0 +1,48 @@
+# Sydney (City of Sydney · Randwick) - thirteen-city set member.
+id: SYD
+name: "Sydney (City of Sydney · Randwick)"
+crs: EPSG:32756
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R1251066", "R6201664"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: AUS, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [330741.06, 6235670.18, 340753.64, 6253213.56]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: null          # all conflated sources (Google Open Buildings, OSM, Microsoft)
+  file: buildings_overture.parquet
+  min_area_m2: 25
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["2544_150.0_-35.0_151.25_-33.75_AS.shp", "2545_151.25_-35.0_152.5_-33.75_AS.shp"]
+    ob25d: null
+
+streets:
+  source: osm
+  cut_all_roads: false
+  # OSM covers only about half of Sydney's buildings, so the conflated Overture set
+  # (OpenStreetMap + Microsoft) is used, like the Global-South cities.
+
+credit: "Overture Maps buildings (OpenStreetMap + Microsoft, conflated); heights by automatic source selection (globfp); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 2074}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.058, "globfp": 0.96}
+  mega_share_default_roads: 0.024
+  tier1_all_roads: false
+  trimmed_blocks: 34
+  mega_blocks_split: 2
+  block_kind: {"street": 2033, "patch": 41}

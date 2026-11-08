@@ -1,0 +1,20 @@
+# three-city set: the international comparison of three reference-grade cities.
+# Track A, morphometric only (46 descriptors), plain street-enclosure blocks.
+set: three_cities
+title: "three-city set - City A (Israeli reference city), Manhattan, Amsterdam"
+descriptors: morphometric46
+cities: [A, MAN, AMS]          # pooling order = row order of the pooled model (keep it)
+cities_dir: ../cities
+data_dir: ../../data            # inputs per city: <data_dir>/<city id>/...
+output_dir: ../../outputs/three_cities
+units:
+  refinement: false             # three-city keeps the plain street-enclosure blocks
+model:
+  pca_components: 5             # whitened PCA, pre-registered rule (docs/configuration.md)
+  pca_whiten: true
+  k_range_city: {from: 5, to: 15}
+  k_range_pooled: {from: 5, to: 15}
+  min_type_size: 12
+  kmeans_n_init: 10
+  random_state: 42
+  stability_reps: 20            # package default; reporting only, never changes K or labels

@@ -1,0 +1,46 @@
+# Montreal (Plateau · Ville-Marie · Rosemont · Sud-Ouest) - thirteen-city set member.
+id: MTL
+name: "Montreal (Plateau · Ville-Marie · Rosemont · Sud-Ouest)"
+crs: EPSG:32618
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R1878503", "R1572820", "R8803540", "R8805747"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: CAN, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [606144.86, 5031970.59, 616100.5, 5049141.57]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: ["OpenStreetMap"]   # OSM polygons served by Overture
+  file: buildings_overture.parquet
+  min_area_m2: 25
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["331_-73.75_45.0_-72.5_46.25_CA_NYUS_VTUS.shp"]
+    ob25d: null
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "OpenStreetMap buildings via Overture Maps; heights by automatic source selection (globfp); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 2329}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.176, "globfp": 0.912}
+  mega_share_default_roads: 0.0
+  tier1_all_roads: false
+  trimmed_blocks: 51
+  mega_blocks_split: 0
+  block_kind: {"street": 2329}

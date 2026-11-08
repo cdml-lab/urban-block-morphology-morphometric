@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "urban-block-morphology-morphometric: morphometric urban-block classifications for the three-city and thirteen-city sets"
+version: 1.0.0
+date-released: 2026-10-28
+license: MIT
+authors:
+  - name: "Author removed for anonymity; will be added after the article is accepted"
+keywords: [urban morphology, urban blocks, momepy, clustering, classification, international comparison]
+references:
+  - type: software
+    title: "urban-block-morphology"
+    version: 1.0.0
+    authors: [{name: "Author removed for anonymity; will be added after the article is accepted"}]

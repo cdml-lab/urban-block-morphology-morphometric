@@ -1,0 +1,9 @@
+/outputs/
+/data/
+/examples/example_output*/
+/reproduction_results/
+__pycache__/
+*.egg-info/
+.venv/
+*.parquet
+build/

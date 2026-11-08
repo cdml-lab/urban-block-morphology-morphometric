@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urban-block-morphology-morphometric"
+version = "1.0.0"
+description = "Morphometric urban-block classifications (Track A, 46 descriptors) for the three-city (3 cities) and thirteen-city (13 cities) sets, built on urban-block-morphology 1.0.0"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "Author removed for anonymity; will be added after the article is accepted"}]
+dependencies = [
+  # the core package; local install: pip install -e ../urban-block-morphology
+  "urban-block-morphology==1.0.0",
+  "pyyaml>=6", "pandas>=2.0", "numpy>=1.26", "scipy>=1.11", "scikit-learn>=1.5",
+  "geopandas>=1.0", "shapely>=2.0", "pyogrio>=0.7", "pyproj>=3.6", "pyarrow>=14",
+]
+[project.optional-dependencies]
+fetch = ["requests>=2.31", "duckdb>=1.0", "rasterio>=1.3"]   # acquisition + Open Buildings 2.5D heights
+raster = ["rasterio>=1.3"]                                    # Open Buildings 2.5D heights only
+test = ["pytest>=7"]
+[project.scripts]
+blockmorph-morphometric = "blockmorph_morphometric.cli:main"
+[tool.setuptools.packages.find]
+where = ["src"]

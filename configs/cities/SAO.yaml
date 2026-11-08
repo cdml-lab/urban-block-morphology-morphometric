@@ -1,0 +1,46 @@
+# São Paulo (Morumbi · Vila Andrade · Butantã · Campo Limpo) - thirteen-city set member.
+id: SAO
+name: "São Paulo (Morumbi · Vila Andrade · Butantã · Campo Limpo)"
+crs: EPSG:32723
+sets: [thirteen_cities]
+
+boundary:
+  kind: osm_relations             # union of real administrative units (Nominatim lookup by OSM id)
+  relations: ["R3049162", "R2165529", "R3049349", "R3032203"]
+  closing_m: 20                   # hairline gaps between adjacent units sealed
+  land_clip: {gadm_level0: BRA, min_part_km2: 0.25, max_gap_m: 2000}
+  file: boundary.gpkg             # written by `blockmorph-morphometric fetch boundary`
+
+study_area:
+  # study area = boundary ∩ imagery extent; the imagery itself is not used by Track A
+  clip_bbox: [316571.09, 7382164.73, 327940.81, 7395261.69]
+
+buildings:
+  source: overture
+  overture_release: 2026-08-19.0
+  overture_datasets: null          # all conflated sources (Google Open Buildings, OSM, Microsoft)
+  file: buildings_overture.parquet
+  min_area_m2: 10                # informal fabric: 25 m2 would drop a large share of dwellings
+  max_height_m: 260
+
+heights:
+  policy: auto                    # one source per city, chosen by heights.select_height_source
+  candidates:
+    globfp: ["475_-47.5_-23.75_-46.25_-22.5_BR.shp"]
+    ob25d: "ob25d_height.tif"
+
+streets:
+  source: osm
+  cut_all_roads: false
+
+credit: "Overture Maps buildings (Google Open Buildings + OpenStreetMap + Microsoft, conflated); heights by automatic source selection (globfp); streets OpenStreetMap"
+
+study:                            # recorded facts of the study run (not inputs)
+  blocks: {thirteen_cities: 2185}
+  height_source: globfp
+  height_sample_coverage: {"osm": 0.31, "globfp": 0.886, "ob25d": 0.958}
+  mega_share_default_roads: 0.166
+  tier1_all_roads: false
+  trimmed_blocks: 16
+  mega_blocks_split: 36
+  block_kind: {"street": 1628, "patch": 531, "partition": 26}
